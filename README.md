@@ -1,5 +1,7 @@
 # CVDS
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b148295f48343d0a7a1234aea1f37af)](https://app.codacy.com/manual/Ersocaut/CVDS?utm_source=github.com&utm_medium=referral&utm_content=Ersocaut/CVDS&utm_campaign=Badge_Grade_Dashboard)
+
 # __Private repository__
 
 The implementations aren't 100% mine.
