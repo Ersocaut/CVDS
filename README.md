@@ -53,3 +53,15 @@ In case you use this as a guide or take a part of code, is necessary to quote ev
 > Camilo Rincón [Rincon10](https://github.com/Rincon10)
 >
 > Leonardo Galeano [Ersocaut](https://github.com/Ersocaut)
+
+## CVDS-LAB07
+
+> Camilo Rincón [Rincon10](https://github.com/Rincon10)
+>
+> Leonardo Galeano [Ersocaut](https://github.com/Ersocaut)
+
+## CVDS-LAB08
+
+> Camilo Rincón [Rincon10](https://github.com/Rincon10)
+>
+> Leonardo Galeano [Ersocaut](https://github.com/Ersocaut)
