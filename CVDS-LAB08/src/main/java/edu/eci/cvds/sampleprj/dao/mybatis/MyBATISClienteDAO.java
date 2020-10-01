@@ -23,14 +23,12 @@ public class MyBATISClienteDAO implements ClienteDAO {
 
     @Override
     public Cliente load(long id) throws PersistenceException {
-        Cliente cliente = null;
         try{
-            cliente = ClienteMapper.consultarCliente(id);
+            return ClienteMapper.consultarCliente(id);
         }
         catch (org.apache.ibatis.exceptions.PersistenceException e){
             throw new PersistenceException("Error al consultar cliente con id " + id,e);
         }
-        return cliente;
     }
 
     @Override
@@ -44,17 +42,32 @@ public class MyBATISClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public void agregarItemRentado(long docu, Item item, Date fechaini, Date fechafin) throws PersistenceException {
-
+    public void agregarItemRentado(long docu, int id, Date fechaini, Date fechafin) throws PersistenceException {
+        try{
+            ClienteMapper.agregarItemRentadoACliente(docu,id,fechaini,fechafin);
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al agregar item rentado con id " + id + " al cliente con documento " + docu +".",e);
+        }
     }
 
     @Override
     public List<Cliente> consultarClientes() throws PersistenceException {
-        return null;
+        try{
+            return ClienteMapper.consultarClientes();
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al consultar.",e);
+        }
     }
 
     @Override
-    public List<ItemRentado> consultarItemsRentados(long id) throws PersistenceException {
-        return null;
+    public List<Item> consultarItemsRentados(long id) throws PersistenceException {
+        try{
+            return ClienteMapper.consultarItemsRentados(id);
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al consultar.",e);
+        }
     }
 }

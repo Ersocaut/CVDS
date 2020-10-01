@@ -22,9 +22,6 @@ public class TipoItem implements Serializable{
 
     public TipoItem() {
     }
-    
-    
-    
 
     public int getID() {
         return id;
