@@ -12,6 +12,11 @@ import javax.inject.Inject;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * @author Iván Camilo Rincón Saavedra
+ * @author Leonardo Galeano
+ * @version 10/1/2020
+ */
 public class MyBATISClienteDAO implements ClienteDAO {
     @Inject
     private ClienteMapper ClienteMapper;
