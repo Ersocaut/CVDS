@@ -41,6 +41,35 @@
         INSERT INTO VI_ITEMRENTADO (CLIENTES_documento,ITEMS_id,fechainiciorenta,fechafinrenta)
          VALUES(#{idcli},#{idit},#{fechaini},#{fechafin});
     </insert>
+    <select id="consultarItemsRentados" parameterType="map" resultMap="ClienteResult">
+        SELECT
+                c.nombre AS c_nombre,
+                c.documento AS c_documento,
+                c.telefono AS c_telefono,
+                c.direccion AS c_direccion,
+                c.email AS c_email,
+                c.vetado AS c_vetado,
+
+                ir.id AS ir_id,
+                ir.fechainiciorenta AS ir_fechainiciorenta ,
+                ir.fechafinrenta AS ir_fechafinrenta,
+
+                i.id AS i_id,
+                i.nombre AS i_nombre,
+                i.descripcion AS i_descripcion,
+                i.fechalanzamiento AS i_fechalanzamiento,
+                i.tarifaxdia AS i_tarifaxdia,
+                i.formatorenta AS i_formatorenta,
+                i.genero AS i_genero,
+
+                ti.id AS ti_id ,
+                ti.descripcion AS ti_descripcion
+
+                FROM VI_CLIENTES AS c
+                INNER JOIN VI_ITEMRENTADO AS ir ON #{idcli}=ir.CLIENTES_documento
+                INNER JOIN VI_ITEMS AS i ON ir.ITEMS_id=i.id
+                INNER JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
+    </select>
     <select id="consultarClientes" parameterType="map" resultMap="ClienteResult">
         SELECT
                 c.nombre AS c_nombre,
