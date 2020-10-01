@@ -32,12 +32,20 @@ public interface ClienteMapper {
 
     /**
      * Consultar todos los clientes
-     * @return 
+     * @return List<Cliente>, lista de todos los clientes en la base de datos
      */
     public List<Cliente> consultarClientes();
 
-    public List<Item> consultarItemsRentados(@Param("idcli")long id);
+    /**
+     * Metodo que se encarga de agregar un cliente
+     * @param cli
+     */
+    public void agregarCliente(@Param("cli") Cliente cli);
 
-    public void agregarCliente(@Param("cli")Cliente cli);
+    /**
+     * Metodo que dice que clientes fueron vetados
+     * @return List<Cliente>
+     */
+    public List<Cliente> consultarClientesVetados();
     
 }

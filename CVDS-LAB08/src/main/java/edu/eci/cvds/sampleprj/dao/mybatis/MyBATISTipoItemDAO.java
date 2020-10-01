@@ -10,25 +10,35 @@ import java.util.List;
 
 public class MyBATISTipoItemDAO implements TipoItemDAO {
     @Inject
-    private TipoItemMapper TipoItemMapper;
+    private TipoItemMapper tipoItemMapper;
 
     @Override
     public void save(TipoItem ti) throws PersistenceException {
         try{
-            TipoItemMapper.addTipoItem(ti);
+            tipoItemMapper.agregarTipoItem(ti);
         }
         catch(org.apache.ibatis.exceptions.PersistenceException e){
-            throw new PersistenceException("Error al agregar.",e);
+            throw new PersistenceException("Error al agregar el nuevo tipo de item.",e);
         }
     }
 
     @Override
     public TipoItem load(int id) throws PersistenceException {
-        return null;
+        try{
+            return tipoItemMapper.getTipoItem(id);
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al consultar el tipo con id: "+ id,e);
+        }
     }
 
     @Override
     public List<TipoItem> loadTiposItems() throws PersistenceException {
-        return null;
+        try{
+            return tipoItemMapper.getTiposItems();
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al consultar los tipos en la base de datos.",e);
+        }
     }
 }

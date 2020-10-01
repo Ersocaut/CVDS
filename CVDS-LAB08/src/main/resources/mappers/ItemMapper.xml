@@ -19,6 +19,7 @@
                 FROM VI_ITEMS AS i
                 LEFT JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id;
     </select>
+
     <select id="consultarItem" resultMap="ItemResult" parameterType="map">
         SELECT
                  i.id AS i_id,

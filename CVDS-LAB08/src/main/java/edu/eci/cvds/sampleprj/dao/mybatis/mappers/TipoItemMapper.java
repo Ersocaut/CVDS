@@ -15,6 +15,6 @@ public interface TipoItemMapper {
     
     public TipoItem getTipoItem(int id);
     
-    public void addTipoItem(@Param("ti") TipoItem ti);
+    public void agregarTipoItem(@Param("ti") TipoItem ti);
 
 }

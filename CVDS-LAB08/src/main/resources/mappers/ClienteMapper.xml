@@ -33,15 +33,7 @@
                 LEFT JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
                 WHERE #{idcli} =  c.documento ;
     </select>
-    <insert id="agregarCliente" parameterType="map">
-        INSERT INTO VI_CLIENTES (documento, nombre, telefono, direccion, email,vetado)
-        VALUES (#{clidocumento},#{clinombre},#{clitelefono},#{clidireccion},#{cliemail},#{clivetado});
-    </insert>
-    <insert id="agregarItemRentadoACliente" parameterType="map" >
-        INSERT INTO VI_ITEMRENTADO (CLIENTES_documento,ITEMS_id,fechainiciorenta,fechafinrenta)
-         VALUES(#{idcli},#{idit},#{fechaini},#{fechafin});
-    </insert>
-    <select id="consultarItemsRentados" parameterType="map" resultMap="ClienteResult">
+    <select id="consultarClientesVetados" parameterType="map" resultMap="ClienteResult">
         SELECT
                 c.nombre AS c_nombre,
                 c.documento AS c_documento,
@@ -64,12 +56,20 @@
 
                 ti.id AS ti_id ,
                 ti.descripcion AS ti_descripcion
-
                 FROM VI_CLIENTES AS c
-                INNER JOIN VI_ITEMRENTADO AS ir ON #{idcli}=ir.CLIENTES_documento
-                INNER JOIN VI_ITEMS AS i ON ir.ITEMS_id=i.id
-                INNER JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
+                LEFT JOIN VI_ITEMRENTADO AS ir ON c.documento=ir.CLIENTES_documento
+                LEFT JOIN VI_ITEMS AS i ON ir.ITEMS_id=i.id
+                LEFT JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
+                WHERE true =  c.vetado ;
     </select>
+    <insert id="agregarCliente" parameterType="map">
+        INSERT INTO VI_CLIENTES (documento, nombre, telefono, direccion, email,vetado)
+        VALUES (#{cli.documento},#{cli.nombre},#{cli.telefono},#{cli.direccion},#{cli.email},#{cli.vetado});
+    </insert>
+    <insert id="agregarItemRentadoACliente" parameterType="map" >
+        INSERT INTO VI_ITEMRENTADO (CLIENTES_documento,ITEMS_id,fechainiciorenta,fechafinrenta)
+         VALUES(#{idcli},#{idit},#{fechaini},#{fechafin});
+    </insert>
     <select id="consultarClientes" parameterType="map" resultMap="ClienteResult">
         SELECT
                 c.nombre AS c_nombre,
