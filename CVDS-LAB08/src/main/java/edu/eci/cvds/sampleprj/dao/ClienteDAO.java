@@ -10,13 +10,13 @@ import java.sql.Date;
 
 public interface ClienteDAO {
 
-    public Cliente load(long id) throws ExcepcionServiciosAlquiler;
+    public Cliente load(long id) throws PersistenceException;
 
-    void save(Cliente cli) throws PersistenceException;
+    public void save(Cliente cli) throws PersistenceException;
 
-    void agregarItemRentado(long docu, Item item, Date fechaini, Date fechafin);
+    public void agregarItemRentado(long docu, Item item, Date fechaini, Date fechafin) throws PersistenceException;
 
-    public List<Cliente> consultarClientes() throws ExcepcionServiciosAlquiler;
+    public List<Cliente> consultarClientes() throws PersistenceException;
 
-    public List<ItemRentado> consultarItemsRentados(long id) throws ExcepcionServiciosAlquiler;
+    public List<ItemRentado> consultarItemsRentados(long id) throws PersistenceException;
 }

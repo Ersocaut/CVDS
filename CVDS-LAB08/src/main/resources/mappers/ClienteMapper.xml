@@ -33,6 +33,10 @@
                 LEFT JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
                 WHERE #{idcli} =  c.documento ;
     </select>
+    <insert id="agregarCliente" parameterType="map">
+        INSERT INTO VI_CLIENTES (documento, nombre, telefono, direccion, email,vetado)
+        VALUES (#{clidocumento},#{clinombre},#{clitelefono},#{clidireccion},#{cliemail},#{clivetado});
+    </insert>
     <insert id="agregarItemRentadoACliente" parameterType="map" >
         INSERT INTO VI_ITEMRENTADO (CLIENTES_documento,ITEMS_id,fechainiciorenta,fechafinrenta)
          VALUES(#{idcli},#{idit},#{fechaini},#{fechafin});
