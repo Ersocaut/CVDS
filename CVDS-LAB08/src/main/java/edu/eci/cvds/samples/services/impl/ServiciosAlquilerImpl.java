@@ -12,6 +12,7 @@ import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class ServiciosAlquilerImpl implements ServiciosAlquiler {
@@ -29,8 +30,18 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     private TipoItemDAO tipoItemDAO;
 
     @Override
-    public int valorMultaRetrasoxDia(int itemId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int valorMultaRetrasoxDia(int itemId) throws ExcepcionServiciosAlquiler{
+        try{
+            Optional<Item> item = Optional.ofNullable(itemDAO.load( itemId ) );
+            if( !item.isPresent()){
+                throw new ExcepcionServiciosAlquiler("El item con id:" +itemId+ " no existe en la base de datos." );
+            }
+            return (int) itemDAO.load(itemId).getTarifaxDia();
+        }
+        catch (PersistenceException ex){
+            throw new ExcepcionServiciosAlquiler("Error al consultar al consultar el valor de la multa del item con id: " +itemId ,ex);
+        }
+
     }
 
     @Override
@@ -84,7 +95,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
     @Override
     public long consultarMultaAlquiler(int iditem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new ExcepcionServiciosAlquiler("Sin id de un cliente no se puede calcular la multa.");
     }
 
     @Override
