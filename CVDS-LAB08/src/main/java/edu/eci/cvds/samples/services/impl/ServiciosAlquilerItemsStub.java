@@ -11,11 +11,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
 
@@ -35,13 +31,13 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         itemsrentados = new HashMap<>();
         tipositems = new HashMap<>();
         mapaPrestamosPorIdCliente=new HashMap<>();
-        poblar();
+        //poblar();
     }
 
     @Override
-    public int valorMultaRetrasoxDia(int itemId) {
-
-        return MULTA_DIARIA ;
+    public int valorMultaRetrasoxDia(int itemId) throws ExcepcionServiciosAlquiler {
+        Item item = consultarItem( itemId);
+        return MULTA_DIARIA;
     }
 
     @Override
@@ -240,6 +236,4 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         clientes.put(c3.getDocumento(), c3);
 
     }
-
-    
 }

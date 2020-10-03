@@ -36,7 +36,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
             if( !item.isPresent()){
                 throw new ExcepcionServiciosAlquiler("El item con id:" +itemId+ " no existe en la base de datos." );
             }
-            return (int) itemDAO.load(itemId).getTarifaxDia();
+            return (int)item.get().getTarifaxDia();
         }
         catch (PersistenceException ex){
             throw new ExcepcionServiciosAlquiler("Error al consultar al consultar el valor de la multa del item con id: " +itemId ,ex);
