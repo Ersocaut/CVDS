@@ -30,7 +30,7 @@ public interface ServiciosAlquiler {
      * @obj consultar los items que estan disponibles para alquiler
      * @return el listado de items disponibles
      */
-    public abstract List<Item> consultarItemsDisponibles();
+    public abstract List<Item> consultarItemsDisponibles() throws ExcepcionServiciosAlquiler;
 
     /**
      * @obj consultar el valor de la multa del alquiler, dado el id del item
@@ -49,7 +49,7 @@ public interface ServiciosAlquiler {
     public abstract List<TipoItem> consultarTiposItem() throws ExcepcionServiciosAlquiler;
 
     /**
-     * @obj rejistrar el alkiler de un item
+     * @obj registrar el alquiler de un item
      * @pre numdias >=1
      * @param date fecha de rejistro del alquiler
      * @param docu identificacion de a quien se le cargara el alquiler

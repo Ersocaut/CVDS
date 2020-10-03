@@ -41,6 +41,12 @@
         INSERT INTO VI_ITEMS
         VALUES( #{item.id},#{item.nombre},#{item.descripcion},#{item.fechaLanzamiento},#{item.tarifaxDia},#{item.formatoRenta},#{item.genero},#{item.tipo.id}) ;
     </insert>
+
+    <update id="actualizarTarifa" parameterType="map">
+        UPDATE VI_ITEMS
+        SET tarifaxdia = #{tarifa}
+        WHERE id = #{iditem};
+    </update>
     <resultMap id="ItemResult"  type="Item">
         <id property="id" column="i_id"/>
         <result property="nombre" column="i_nombre"/>
@@ -51,8 +57,5 @@
         <result property="genero" column="i_genero"/>
         <association property="tipo" javaType="TipoItem" resultMap="edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper.TipoItemResult" columnPrefix="ti_"></association>
     </resultMap>
-
-
-    
     
 </mapper>

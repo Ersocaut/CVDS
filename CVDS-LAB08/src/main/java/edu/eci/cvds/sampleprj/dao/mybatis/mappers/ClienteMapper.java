@@ -47,5 +47,7 @@ public interface ClienteMapper {
      * @return List<Cliente>
      */
     public List<Cliente> consultarClientesVetados();
+
+    public void vetar(long docu, boolean estado);
     
 }

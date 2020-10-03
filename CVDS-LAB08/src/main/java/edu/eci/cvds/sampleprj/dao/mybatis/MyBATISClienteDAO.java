@@ -60,4 +60,13 @@ public class MyBATISClienteDAO implements ClienteDAO {
             throw new PersistenceException("Error al consultar.",e);
         }
     }
+    @Override
+    public void vetar(long docu, boolean estado) throws PersistenceException {
+        try{
+            ClienteMapper.vetar(docu,estado);
+        }
+        catch(org.apache.ibatis.exceptions.PersistenceException e){
+            throw new PersistenceException("Error al vetar.",e);
+        }
+    }
 }
