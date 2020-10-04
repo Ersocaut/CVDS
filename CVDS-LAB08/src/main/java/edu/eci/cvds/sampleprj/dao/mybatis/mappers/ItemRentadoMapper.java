@@ -28,5 +28,13 @@ public interface ItemRentadoMapper {
      */
     public List<ItemRentado> consultarItemRentados();
 
+    /**
+     * Metodo que consulta la informacion de un item que ha sido rentado
+     * @param idItem, id del item a buscar y que este rentado
+     * @return ItemRentado, informacion de la renta del item
+     * @throws PersistenceException, si existe algun error de persitencia al buscar el item rentado
+     */
+    public ItemRentado consultarItemRentado( @Param("idItem") int idItem );
+
 
 }

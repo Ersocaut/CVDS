@@ -25,5 +25,13 @@ public interface ItemRentadoDAO {
      */
     public List<ItemRentado> consultarItemsRentados(long idCliente) throws PersistenceException;
 
+    /**
+     * Metodo que consulta la informacion de un item que ha sido rentado
+     * @param idItem, id del item a buscar y que este rentado
+     * @return ItemRentado, informacion de la renta del item
+     * @throws PersistenceException, si existe algun error de persitencia al buscar el item rentado
+     */
+    public ItemRentado consultarItemRentado( int  idItem ) throws PersistenceException;
+
 
 }

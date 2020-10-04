@@ -13,55 +13,50 @@ import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import org.mybatis.guice.transactional.Transactional;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Singleton
 public class ServiciosAlquilerImpl implements ServiciosAlquiler {
-
     @Inject
     private ItemDAO itemDAO;
-
     @Inject
     private ClienteDAO clienteDAO;
-
     @Inject
     private ItemRentadoDAO itemRentadoDAO;
-
     @Inject
     private TipoItemDAO tipoItemDAO;
+    private static final int MULTA_DIARIA=5000;
 
     @Override
-    public int valorMultaRetrasoxDia(int itemId) throws ExcepcionServiciosAlquiler{
-        try{
-            Optional<Item> item = Optional.ofNullable(itemDAO.load( itemId ) );
-            if( !item.isPresent()){
-                throw new ExcepcionServiciosAlquiler("El item con id:" +itemId+ " no existe en la base de datos." );
-            }
-            return (int)item.get().getTarifaxDia();
-        }
-        catch (PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al consultar al consultar el valor de la multa del item con id: " +itemId ,ex);
-        }
-
+    public int valorMultaRetrasoxDia(int itemId) {
+        //Esta implementacion se baso de la implementacion de valorMultaRetrasoxDia que esta en ServiciosAlquilerItemsStub
+        //consultarItem( itemId ).getTarifaxDia();
+        return MULTA_DIARIA;
     }
 
     @Override
     public Item consultarItem(int id) throws ExcepcionServiciosAlquiler {
         try {
-            return itemDAO.load(id);
-        } catch (PersistenceException ex) {
-            throw new ExcepcionServiciosAlquiler("Error al consultar el item "+id,ex);
+            Optional<Item> optionalItem= Optional.ofNullable(itemDAO.load(id) );
+            optionalItem.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_ITEM));
+            return optionalItem.get();
+        } catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al consultar el item con id:"+id,persistenceException);
         }
     }
 
     @Override
     public Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler {
         try{
-            return clienteDAO.load(docu);
+            Optional<Cliente> optionalCliente = Optional.ofNullable(clienteDAO.load(docu) );
+            optionalCliente.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_CLIENTE));
+            return optionalCliente.get();
         }
-        catch(PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Cliente no encontrado.",ex);
+        catch(PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al consultar el cliente con id: " + docu,persistenceException);
         }
     }
 
@@ -70,8 +65,8 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         try{
             return itemRentadoDAO.consultarItemsRentados(idcliente);
         }
-        catch (PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al consultar items cliente.",ex);
+        catch (PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al consultar los items rentados del cliente con id : " + idcliente ,persistenceException);
         }
     }
 
@@ -80,8 +75,8 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         try{
             return clienteDAO.consultarClientes();
         }
-        catch (PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al consultar clientes.",ex);
+        catch (PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al consultar clientes.",persistenceException);
         }
     }
 
@@ -90,22 +85,37 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         try{
             return itemDAO.load();
         }
-        catch (PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al consultar Items disponibles.",ex);
+        catch (PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al consultar Items disponibles.",persistenceException);
         }
     }
 
     @Override
-    public long consultarMultaAlquiler(int iditem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
-        throw new ExcepcionServiciosAlquiler("Sin id de un cliente no se puede calcular la multa.");
+    public long consultarMultaAlquiler(int idItem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
+        //Esta implementacion se baso de la implementacion de consultarMultaAlquiler que esta en ServiciosAlquilerItemsStub
+        try {
+            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem) );
+            optionalItemRentado.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_ALQUILERITEM + idItem));
+
+            LocalDate fechaMinimaEntrega=optionalItemRentado.get().getFechafinrenta().toLocalDate();
+            LocalDate fechaEntrega=fechaDevolucion.toLocalDate();
+            long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
+            return diasRetraso * MULTA_DIARIA;
+
+
+        } catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al consultar la multa de alquiler del Item con id " + idItem, persistenceException);
+        }
     }
 
     @Override
     public TipoItem consultarTipoItem(int id) throws ExcepcionServiciosAlquiler {
         try {
-            return tipoItemDAO.load(id);
-        } catch (PersistenceException ex) {
-            throw new ExcepcionServiciosAlquiler("Error al consultar Tipo Item con id " + id, ex);
+            Optional<TipoItem> optionalTipoItem = Optional.ofNullable( tipoItemDAO.load(id) );
+            optionalTipoItem.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_TIPOITEM));
+            return optionalTipoItem.get();
+        } catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al consultar Tipo Item con id " + id, persistenceException);
         }
     }
 
@@ -113,8 +123,8 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     public List<TipoItem> consultarTiposItem() throws ExcepcionServiciosAlquiler {
         try {
             return tipoItemDAO.loadTiposItems();
-        } catch (PersistenceException ex) {
-            throw new ExcepcionServiciosAlquiler("Error al consultar Tipo Items.", ex);
+        } catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al consultar Tipo Items.", persistenceException);
         }
     }
 
@@ -122,9 +132,10 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     @Override
     public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler {
         try {
+            Cliente cliente = consultarCliente( docu );
             clienteDAO.agregarItemRentado(docu,item.getId(),date, Date.valueOf(date.toLocalDate().plusDays(numdias)));
-        } catch (PersistenceException ex) {
-            throw new ExcepcionServiciosAlquiler("Error al registrar Alquiler a cliente.", ex);
+        } catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al registrar Alquiler a cliente.", persistenceException);
         }
     }
 
@@ -134,20 +145,15 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         try {
             clienteDAO.save(c);
         }
-        catch (PersistenceException ex) {
-            throw new ExcepcionServiciosAlquiler("Error al agregar cliente.", ex);
+        catch (PersistenceException persistenceException) {
+            throw new ExcepcionServiciosAlquiler("Error al agregar cliente.", persistenceException);
         }
     }
 
     @Override
-    public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
-        try{
-            Item cons = itemDAO.load(iditem);
-            return cons.getTarifaxDia() * numdias;
-        }
-        catch(PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al consultar costo de alquiler de x dias.",ex);
-        }
+    public long consultarCostoAlquiler(int idItem, int numdias) throws ExcepcionServiciosAlquiler {
+        Item item = consultarItem( idItem );
+        return item.getTarifaxDia() * numdias;
     }
 
     @Transactional
@@ -156,8 +162,8 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         try{
             itemDAO.actualizarTarifa(id,tarifa);
         }
-        catch(PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al cambiar tarifa del item con id " + id,ex);
+        catch(PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al cambiar tarifa del item con id: " + id,persistenceException);
         }
     }
 
@@ -167,8 +173,8 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
        try{
            itemDAO.save(i);
        }
-       catch (PersistenceException ex){
-           throw new ExcepcionServiciosAlquiler("Error al registrar item.",ex);
+       catch (PersistenceException persistenceException){
+           throw new ExcepcionServiciosAlquiler("Error al registrar item.",persistenceException);
        }
     }
 
@@ -176,10 +182,11 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     @Override
     public void vetarCliente(long docu, boolean estado) throws ExcepcionServiciosAlquiler {
         try{
+            consultarCliente( docu );
             clienteDAO.vetar(docu,estado);
         }
-        catch(PersistenceException ex){
-            throw new ExcepcionServiciosAlquiler("Error al vetar",ex);
+        catch(PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al vetar al cliente con id: " + docu ,persistenceException);
         }
     }
 

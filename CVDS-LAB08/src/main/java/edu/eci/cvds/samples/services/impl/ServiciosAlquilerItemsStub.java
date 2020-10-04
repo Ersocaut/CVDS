@@ -37,7 +37,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
 
     @Override
     public int valorMultaRetrasoxDia(int itemId) throws ExcepcionServiciosAlquiler {
-        Item item = consultarItem( itemId);
+        //consultarItem( itemId).getTarifaxDia();
         return MULTA_DIARIA;
     }
 
