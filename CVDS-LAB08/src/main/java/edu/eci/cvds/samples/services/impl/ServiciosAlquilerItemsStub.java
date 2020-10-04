@@ -6,6 +6,7 @@ import edu.eci.cvds.samples.entities.ItemRentado;
 import edu.eci.cvds.samples.entities.TipoItem;
 import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
+import org.mybatis.guice.transactional.Transactional;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -54,6 +55,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         return  new LinkedList<>(clientes.values());
     }
 
+    @Transactional
     @Override
     public void registrarCliente(Cliente p) throws ExcepcionServiciosAlquiler {
         if (!clientes.containsKey(p.getDocumento())) {
@@ -63,6 +65,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         }
     }
 
+    @Transactional
     @Override
     public void vetarCliente(long docu, boolean estado) throws ExcepcionServiciosAlquiler {
         if(clientes.containsKey(docu)){
@@ -89,6 +92,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         return  new LinkedList<>(itemsDisponibles.values());
     }
 
+    @Transactional
     @Override
     public void registrarItem(Item i) throws ExcepcionServiciosAlquiler {
         if (!itemsDisponibles.containsKey(i.getId())) {
@@ -98,6 +102,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         }
     }
 
+    @Transactional
     @Override
     public void actualizarTarifaItem(int id, long tarifa) throws ExcepcionServiciosAlquiler {
         if (!itemsDisponibles.containsKey(id)) {
@@ -124,6 +129,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
         return  new LinkedList<>(tipositems.values());
     }
 
+    @Transactional
     @Override
     public void registrarAlquilerCliente(Date date,long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler {
 

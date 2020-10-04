@@ -4,6 +4,7 @@ import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
 import edu.eci.cvds.samples.entities.TipoItem;
+import org.mybatis.guice.transactional.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -12,6 +13,7 @@ public class MyBATISTipoItemDAO implements TipoItemDAO {
     @Inject
     private TipoItemMapper tipoItemMapper;
 
+    @Transactional
     @Override
     public void save(TipoItem ti) throws PersistenceException {
         try{

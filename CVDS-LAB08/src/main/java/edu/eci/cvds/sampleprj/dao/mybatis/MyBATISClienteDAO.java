@@ -7,6 +7,7 @@ import edu.eci.cvds.samples.entities.Cliente;
 import edu.eci.cvds.samples.entities.Item;
 import edu.eci.cvds.samples.entities.ItemRentado;
 import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
+import org.mybatis.guice.transactional.Transactional;
 
 import javax.inject.Inject;
 import java.sql.Date;
@@ -31,6 +32,7 @@ public class MyBATISClienteDAO implements ClienteDAO {
         }
     }
 
+    @Transactional
     @Override
     public void save(Cliente cli) throws PersistenceException {
         try{
@@ -41,6 +43,7 @@ public class MyBATISClienteDAO implements ClienteDAO {
         }
     }
 
+    @Transactional
     @Override
     public void agregarItemRentado(long docu, int id, Date fechaini, Date fechafin) throws PersistenceException {
         try{
@@ -60,6 +63,8 @@ public class MyBATISClienteDAO implements ClienteDAO {
             throw new PersistenceException("Error al consultar.",e);
         }
     }
+
+    @Transactional
     @Override
     public void vetar(long docu, boolean estado) throws PersistenceException {
         try{
