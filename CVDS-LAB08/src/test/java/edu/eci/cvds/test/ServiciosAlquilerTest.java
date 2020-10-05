@@ -33,10 +33,10 @@ public class ServiciosAlquilerTest {
 
     @Test
     public void emptyDB() {
-        for(int i = 0; i < 100; i += 10) {
+        for(int i = 1; i < 100; i += 10) {
             boolean r = false;
             try {
-                Cliente cliente = serviciosAlquiler.consultarCliente(6969);
+                Cliente cliente = serviciosAlquiler.consultarCliente(6869 + i);
             } catch(ExcepcionServiciosAlquiler e) {
                 r = true;
             } catch(IndexOutOfBoundsException e) {
@@ -49,13 +49,13 @@ public class ServiciosAlquilerTest {
 
 
     @Test
-    public void PERRAPRUEBANUMERO1(){
+    public void consultandoUnCliente() throws ExcepcionServiciosAlquiler {
         try {
             Cliente cliente = serviciosAlquiler.consultarCliente(2160666);
             Assert.assertEquals("Javier López",cliente.getNombre());
         } catch(ExcepcionServiciosAlquiler e) {
             System.out.println("JAJAJSJJAJAJ pelotudo");
+            throw new ExcepcionServiciosAlquiler("Error Prueba Consultar Cliente.",e);
         }
-
     }
 }
