@@ -15,6 +15,7 @@ import org.mybatis.guice.transactional.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     @Override
     public List<ItemRentado> consultarItemsCliente(long idcliente) throws ExcepcionServiciosAlquiler {
         try{
+            consultarCliente( idcliente);
             return itemRentadoDAO.consultarItemsRentados(idcliente);
         }
         catch (PersistenceException persistenceException){
@@ -99,6 +101,9 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
             LocalDate fechaMinimaEntrega=optionalItemRentado.get().getFechafinrenta().toLocalDate();
             LocalDate fechaEntrega=fechaDevolucion.toLocalDate();
+            if(fechaEntrega.isBefore( fechaMinimaEntrega ) ){
+                throw new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.FECHA_LIMITE_INVALIDA );
+            }
             long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
             return diasRetraso * MULTA_DIARIA;
 
@@ -133,6 +138,9 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler {
         try {
             Cliente cliente = consultarCliente( docu );
+            if( numdias < 0 ){
+                throw new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.DIAS_INVALIDOS);
+            }
             clienteDAO.agregarItemRentado(docu,item.getId(),date, Date.valueOf(date.toLocalDate().plusDays(numdias)));
         } catch (PersistenceException persistenceException) {
             throw new ExcepcionServiciosAlquiler("Error al registrar Alquiler a cliente.", persistenceException);
@@ -160,6 +168,10 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     @Override
     public void actualizarTarifaItem(int id, long tarifa) throws ExcepcionServiciosAlquiler {
         try{
+            consultarItem( id );
+            if( tarifa < 0 ){
+                throw new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.TARIFA_INVALIDA);
+            }
             itemDAO.actualizarTarifa(id,tarifa);
         }
         catch(PersistenceException persistenceException){
