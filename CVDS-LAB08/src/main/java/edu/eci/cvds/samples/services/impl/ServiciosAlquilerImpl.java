@@ -202,4 +202,13 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         }
     }
 
+    public ItemRentado consultarItemsRentados(int idItem) throws ExcepcionServiciosAlquiler{
+        try{
+            return itemRentadoDAO.consultarItemRentado( idItem );
+        }
+        catch (PersistenceException persistenceException){
+            throw new ExcepcionServiciosAlquiler("Error al consultar los items rentados ");
+        }
+    }
+
 }

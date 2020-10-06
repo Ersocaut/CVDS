@@ -13,16 +13,24 @@ import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquilerFactory;
 import org.apache.ibatis.session.SqlSession;
+import org.checkerframework.dataflow.qual.TerminatesExecution;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
 public class ServiciosAlquilerTest {
-
     @Inject
     private SqlSession sqlSession;
+    @Inject
+    private ServiciosAlquiler serviciosAlquiler;
 
-    ServiciosAlquiler serviciosAlquiler;
+    private long idCliente;
+    private long tarifa;
+    private int idItem;
+    private int idTipoItem;
+    private int numDias;
+    private boolean vetado;
+
 
     public ServiciosAlquilerTest() {
         serviciosAlquiler = ServiciosAlquilerFactory.getInstance().getServiciosAlquilerTesting();
@@ -89,6 +97,112 @@ public class ServiciosAlquilerTest {
         }
         finally{
             Assert.assertTrue(insert);
+        }
+    }
+    /*
+    @Test
+    public void consultarMultaAlquilerValido() throws ExcepcionServiciosAlquiler {
+        idItem = 4;
+        Date date = java.sql.Date.valueOf("2013-05-05");
+        System.out.println( ( serviciosAlquiler.consultarItemsRentados(idItem));
+        System.out.println( serviciosAlquiler.consultarMultaAlquiler(idItem,date ));
+    }
+**/
+
+    @Test
+    public void consultarCostoAlquilerValido() throws ExcepcionServiciosAlquiler{
+        long answer = -1;
+        idItem = 2;
+        numDias = 20;
+        answer = serviciosAlquiler.consultarCostoAlquiler(idItem, numDias );
+        Assert.assertEquals( answer ,serviciosAlquiler.consultarItem(idItem).getTarifaxDia() * numDias );
+    }
+
+    @Test
+    public void consultarCostoAlquilExcepcionDia(){
+        long answer = -1;
+        idItem = 2;
+        numDias = -20;
+        try {
+            answer = serviciosAlquiler.consultarCostoAlquiler(idItem, numDias );
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(ExcepcionServiciosAlquiler.DIAS_INVALIDOS,excepcionServiciosAlquiler.getMessage());
+        }
+    }
+
+    @Test
+    public void consultarCostoAlquilExcepcionItem(){
+        long answer = -1;
+        idItem = -2;
+        numDias = 20;
+        try {
+            answer = serviciosAlquiler.consultarCostoAlquiler(idItem, numDias );
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(ExcepcionServiciosAlquiler.NO_ITEM,excepcionServiciosAlquiler.getMessage());
+        }
+    }
+
+
+    @Test
+    public void actualizarTarifaItemValido() throws ExcepcionServiciosAlquiler {
+        tarifa = 30000;
+        idItem = 2;
+
+        long currentTarifa = serviciosAlquiler.consultarItem(idItem).getTarifaxDia();
+        serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
+        currentTarifa = serviciosAlquiler.consultarItem(idItem).getTarifaxDia();
+        Assert.assertEquals( tarifa,currentTarifa );
+    }
+
+    @Test
+    public void actualizarTarifaItemExcepcionItem(){
+        tarifa = 30000;
+        idItem = -1100;
+        try {
+            serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals( excepcionServiciosAlquiler.getMessage(),ExcepcionServiciosAlquiler.NO_ITEM);
+        }
+
+
+    }
+    @Test
+    public void actualizarTarifaItemExcepcionTarifa(){
+        tarifa = -151515;
+        idItem = 2;
+        try {
+            serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals( excepcionServiciosAlquiler.getMessage(),ExcepcionServiciosAlquiler.TARIFA_INVALIDA);
+        }
+    }
+
+
+
+    @Test
+    public void vetarClienteValido(){
+        Cliente cliente = null;
+        vetado = true;
+        idCliente = 3146879;
+        try {
+            serviciosAlquiler.vetarCliente(idCliente, vetado );
+            cliente = serviciosAlquiler.consultarCliente(idCliente);
+            Assert.assertEquals(cliente.isVetado(),vetado );
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+        }
+    }
+
+
+    @Test
+    public void vetarClienteExcepcionCliente(){
+        long answer = -1;
+        vetado = true;
+        idCliente = 3146879;
+        String error = "Error al vetar al cliente con id: "+idCliente;
+        try {
+            serviciosAlquiler.vetarCliente(idCliente, vetado );
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(error,excepcionServiciosAlquiler.getMessage());
         }
     }
 

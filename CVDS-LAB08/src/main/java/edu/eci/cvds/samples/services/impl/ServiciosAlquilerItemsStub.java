@@ -76,6 +76,11 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
     }
 
     @Override
+    public ItemRentado consultarItemsRentados(int idItem) throws ExcepcionServiciosAlquiler {
+        return null;
+    }
+
+    @Override
     public Item consultarItem(int id) throws ExcepcionServiciosAlquiler {
         Item i = null;
         if(itemsDisponibles.containsKey(id)){
