@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Calculadora</title>
+	<link rel="stylesheet" href="design.css"/>
+</h:head>
+<h:body >
+	<div >
+		<h1 align="center" style="color: aliceblue">Calculadora estadistica </h1>
+		<center>
+			<h:form id="calculadora_form" style="margin-bottom:10px;">
+				<h:panelGrid  class="myPanelGrid" columns="2"  style="text-align:center" >
+					<h:panelGrid columns="2" style="animation-play-state: running">
+						<p:outputLabel class="output" value="Entrada:"/>
+						<h:inputText id="lista" type="text" binding="#{input}" />
+						<p:outputLabel class="output" value="Moda:" />
+						<p:outputLabel class="output" value="#{calculadoraBean.mode}" />
+						<p:outputLabel class="output" value="Media:" />
+						<p:outputLabel class="output" value="#{calculadoraBean.mean}" />
+						<p:outputLabel class="output" value="Desviacion Estandar:" />
+						<p:outputLabel class="output" value="#{calculadoraBean.standar}" />
+						<p:outputLabel class="output" value="Varianza:" />
+						<p:outputLabel class="output" value="#{calculadoraBean.variance}" />
+						<p:commandButton class="btn-primary" value="Calcular"  update="calculadora_form" actionListener="#{calculadoraBean.calculate(input.value)}" />
+						<p:commandButton class="btn btn-primary" value="Borrar" update="calculadora_form" actionListener="#{calculadoraBean.restart}"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</h:form>
+		</center>
+
+
+	</div>
+</h:body>
+</html>

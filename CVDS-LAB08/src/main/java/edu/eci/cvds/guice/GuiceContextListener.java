@@ -9,6 +9,7 @@ import edu.eci.cvds.sampleprj.dao.*;
 import edu.eci.cvds.sampleprj.dao.mybatis.*;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import edu.eci.cvds.samples.services.impl.ServiciosAlquilerImpl;
+import edu.eci.cvds.samples.services.impl.ServiciosAlquilerItemsStub;
 import org.mybatis.guice.XMLMyBatisModule;
 import org.mybatis.guice.datasource.helper.JdbcHelper;
 import com.google.inject.Guice;
@@ -18,6 +19,8 @@ import com.google.inject.Injector;
  * @author Leonardo Galeano
  * @version 10/5/2020
  */
+
+
 public class GuiceContextListener implements ServletContextListener {
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -38,7 +41,7 @@ public class GuiceContextListener implements ServletContextListener {
                 bind(ClienteDAO.class).to(MyBATISClienteDAO.class);
                 bind(TipoItemDAO.class).to(MyBATISTipoItemDAO.class);
                 bind(ItemRentadoDAO.class).to(MYBATISItemRentadoDAO.class);
-                bind(ServiciosAlquiler.class).to(ServiciosAlquilerImpl.class);
+                bind(ServiciosAlquiler.class).to(ServiciosAlquilerItemsStub.class);
             }
         });
 
