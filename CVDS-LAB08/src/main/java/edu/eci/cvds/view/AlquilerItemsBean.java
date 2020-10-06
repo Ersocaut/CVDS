@@ -26,15 +26,14 @@ public class AlquilerItemsBean extends BasePageBean {
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             excepcionServiciosAlquiler.printStackTrace();
         }
-
     }
 
     public void registrarCliente(String nombre, long documento, String telefono, String direccion, String email ){
         try {
-            System.out.println(serviciosAlquiler);
             serviciosAlquiler.registrarCliente( new Cliente(nombre,documento,telefono,direccion,email) );
+            consultarClientes();
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
-            System.out.println(excepcionServiciosAlquiler.getMessage());
+            excepcionServiciosAlquiler.printStackTrace();
         }
     }
 

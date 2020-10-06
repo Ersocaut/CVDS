@@ -5,17 +5,22 @@ body, html {
 	height: 100%;
 }
 body {
+	text-align: center;
 	font-family: 'Times New Roman';
 	font-weight: 100;
+	margin-left: auto;
+	margin-right: auto;
 	display: flex;
 	overflow: hidden;
+	align-items: center;
+	-ms-scrollbar-highlight-color: aqua;
 }
 
 
 .formaCliente {
 //background: #222;
 //box-shadow: 0 0 1rem rgba(0,0,0,0.3);
-	min-height: 10rem;
+	min-height: 300px;
 	margin: auto;
 	max-width: 50%;
 	padding: .5rem;
@@ -38,7 +43,7 @@ body {
 	transition: 250ms background ease-in;
 }
 
-.login-submit {
+.MyButton {
 	border: 1px solid white;
 	background: transparent;
 	color: white;
@@ -66,4 +71,8 @@ body {
 .underlay-black {
 	background: rgba(0,0,0,0.7);
 	z-index: -1;
+}
+table.dataTable{width:100%;margin:0 auto;clear:both;border-collapse:separate;border-spacing:0}
+.scrollbars {
+	overflow:scroll; height:500px;
 }
