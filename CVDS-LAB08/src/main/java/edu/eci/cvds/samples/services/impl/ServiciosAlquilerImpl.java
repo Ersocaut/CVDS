@@ -2,6 +2,7 @@ package edu.eci.cvds.samples.services.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import edu.eci.cvds.sampleprj.dao.*;
 
 import edu.eci.cvds.samples.entities.Cliente;
@@ -12,6 +13,7 @@ import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import org.mybatis.guice.transactional.Transactional;
 
+import javax.ejb.Local;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -96,13 +98,18 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     public long consultarMultaAlquiler(int idItem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
         //Esta implementacion se baso de la implementacion de consultarMultaAlquiler que esta en ServiciosAlquilerItemsStub
         try {
+            consultarItem( idItem );// valida que exista el item
             Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem) );
             optionalItemRentado.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_ALQUILERITEM + idItem));
 
+            LocalDate fechaInicioRenta = optionalItemRentado.get().getFechainiciorenta().toLocalDate();
             LocalDate fechaMinimaEntrega=optionalItemRentado.get().getFechafinrenta().toLocalDate();
             LocalDate fechaEntrega=fechaDevolucion.toLocalDate();
-            if(fechaEntrega.isBefore( fechaMinimaEntrega ) ){
+            if(fechaEntrega.isBefore( fechaInicioRenta ) ){
                 throw new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.FECHA_LIMITE_INVALIDA );
+            }
+            else if(fechaEntrega.isBefore( fechaMinimaEntrega )  ){
+                return 0;
             }
             long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
             return diasRetraso * MULTA_DIARIA;
@@ -138,6 +145,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler {
         try {
             Cliente cliente = consultarCliente( docu );
+            consultarItem( item.getId());
             if( numdias < 0 ){
                 throw new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.DIAS_INVALIDOS);
             }
@@ -161,6 +169,9 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     @Override
     public long consultarCostoAlquiler(int idItem, int numdias) throws ExcepcionServiciosAlquiler {
         Item item = consultarItem( idItem );
+        if( numdias < 0){
+            throw new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.DIAS_INVALIDOS);
+        }
         return item.getTarifaxDia() * numdias;
     }
 
@@ -201,10 +212,13 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
             throw new ExcepcionServiciosAlquiler("Error al vetar al cliente con id: " + docu ,persistenceException);
         }
     }
-
+    @Override
     public ItemRentado consultarItemsRentados(int idItem) throws ExcepcionServiciosAlquiler{
         try{
-            return itemRentadoDAO.consultarItemRentado( idItem );
+            consultarItem( idItem ); // validar si existe el item
+            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem ) );
+            optionalItemRentado.orElseThrow(() -> new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.NO_ALQUILERITEM+idItem));
+            return optionalItemRentado.get();
         }
         catch (PersistenceException persistenceException){
             throw new ExcepcionServiciosAlquiler("Error al consultar los items rentados ");
