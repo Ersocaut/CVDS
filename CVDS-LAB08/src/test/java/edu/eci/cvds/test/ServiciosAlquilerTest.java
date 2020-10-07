@@ -1,9 +1,7 @@
 package edu.eci.cvds.test;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Calendar;
 import com.google.inject.Inject;
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.samples.entities.Cliente;
@@ -99,15 +97,87 @@ public class ServiciosAlquilerTest {
             Assert.assertTrue(insert);
         }
     }
-    /*
+
     @Test
     public void consultarMultaAlquilerValido() throws ExcepcionServiciosAlquiler {
+        int diasRetraso = 5;
         idItem = 4;
-        Date date = java.sql.Date.valueOf("2013-05-05");
-        System.out.println( ( serviciosAlquiler.consultarItemsRentados(idItem));
-        System.out.println( serviciosAlquiler.consultarMultaAlquiler(idItem,date ));
+        Date fechaFinRentaItem = serviciosAlquiler.consultarItemsRentados(idItem).getFechafinrenta();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( fechaFinRentaItem );
+        calendar.add( Calendar.DAY_OF_YEAR,diasRetraso);
+
+        java.sql.Date entrega = new java.sql.Date(calendar.getTime().getTime());
+        Assert.assertEquals( serviciosAlquiler.consultarMultaAlquiler(idItem,entrega ),serviciosAlquiler.valorMultaRetrasoxDia(idItem) * diasRetraso );
     }
-**/
+
+    @Test
+    public void consultarMultaAlquilerValidoIgualaCero() throws ExcepcionServiciosAlquiler {
+        int diasRetraso = 0;
+        idItem = 4;
+        Date fechaFinRentaItem = serviciosAlquiler.consultarItemsRentados(idItem).getFechafinrenta();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( fechaFinRentaItem );
+        calendar.add( Calendar.DAY_OF_YEAR,diasRetraso);
+
+        java.sql.Date entrega = new java.sql.Date(calendar.getTime().getTime());
+        Assert.assertEquals( serviciosAlquiler.consultarMultaAlquiler(idItem,entrega ),0 );
+    }
+    @Test
+    public void consultarMultaAlquilerValidoExcepcionItem() {
+        int diasRetraso = 0;
+        idItem = -100;
+        try {
+            Date fechaFinRentaItem = serviciosAlquiler.consultarItemsRentados(idItem).getFechafinrenta();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( fechaFinRentaItem );
+            calendar.add( Calendar.DAY_OF_YEAR,diasRetraso);
+
+            java.sql.Date entrega = new java.sql.Date(calendar.getTime().getTime());
+            serviciosAlquiler.consultarMultaAlquiler(idItem,entrega );
+            Assert.assertFalse(true);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals( excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.NO_ITEM);
+        }
+    }
+    @Test
+    public void consultarMultaAlquilerValidoExcepcionItemNoRentado() {
+        int diasRetraso = 0;
+        idItem = 1001169369;
+        try {
+            Date fechaFinRentaItem = serviciosAlquiler.consultarItemsRentados(idItem).getFechafinrenta();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( fechaFinRentaItem );
+            calendar.add( Calendar.DAY_OF_YEAR,diasRetraso);
+
+            java.sql.Date entrega = new java.sql.Date(calendar.getTime().getTime());
+            serviciosAlquiler.consultarMultaAlquiler(idItem,entrega );
+            Assert.assertFalse(true);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals( excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.NO_ALQUILERITEM+idItem);
+        }
+    }
+
+    @Test
+    public void consultarMultaAlquilerValidoExcepcionFechaIncorrecta() {
+        int diasRetraso = -1000;
+        idItem = 4;
+        try {
+            Date fechaFinRentaItem = serviciosAlquiler.consultarItemsRentados(idItem).getFechafinrenta();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( fechaFinRentaItem );
+            calendar.add( Calendar.DAY_OF_YEAR,diasRetraso);
+
+            java.sql.Date entrega = new java.sql.Date(calendar.getTime().getTime());
+            serviciosAlquiler.consultarMultaAlquiler(idItem,entrega );
+            Assert.assertFalse(true);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals( excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.FECHA_LIMITE_INVALIDA);
+        }
+    }
+
 
     @Test
     public void consultarCostoAlquilerValido() throws ExcepcionServiciosAlquiler{
@@ -125,7 +195,9 @@ public class ServiciosAlquilerTest {
         numDias = -20;
         try {
             answer = serviciosAlquiler.consultarCostoAlquiler(idItem, numDias );
+            Assert.assertFalse(true);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertTrue(answer== -1);
             Assert.assertEquals(ExcepcionServiciosAlquiler.DIAS_INVALIDOS,excepcionServiciosAlquiler.getMessage());
         }
     }
@@ -137,7 +209,9 @@ public class ServiciosAlquilerTest {
         numDias = 20;
         try {
             answer = serviciosAlquiler.consultarCostoAlquiler(idItem, numDias );
+            Assert.assertFalse(true);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertTrue(answer== -1);
             Assert.assertEquals(ExcepcionServiciosAlquiler.NO_ITEM,excepcionServiciosAlquiler.getMessage());
         }
     }
@@ -148,7 +222,7 @@ public class ServiciosAlquilerTest {
         tarifa = 30000;
         idItem = 2;
 
-        long currentTarifa = serviciosAlquiler.consultarItem(idItem).getTarifaxDia();
+        long currentTarifa;
         serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
         currentTarifa = serviciosAlquiler.consultarItem(idItem).getTarifaxDia();
         Assert.assertEquals( tarifa,currentTarifa );
@@ -160,6 +234,7 @@ public class ServiciosAlquilerTest {
         idItem = -1100;
         try {
             serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
+            Assert.assertFalse(true);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             Assert.assertEquals( excepcionServiciosAlquiler.getMessage(),ExcepcionServiciosAlquiler.NO_ITEM);
         }
@@ -172,6 +247,7 @@ public class ServiciosAlquilerTest {
         idItem = 2;
         try {
             serviciosAlquiler.actualizarTarifaItem( idItem, tarifa);
+            Assert.assertFalse(true);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             Assert.assertEquals( excepcionServiciosAlquiler.getMessage(),ExcepcionServiciosAlquiler.TARIFA_INVALIDA);
         }
@@ -195,15 +271,73 @@ public class ServiciosAlquilerTest {
 
     @Test
     public void vetarClienteExcepcionCliente(){
-        long answer = -1;
         vetado = true;
         idCliente = 3146879;
         String error = "Error al vetar al cliente con id: "+idCliente;
         try {
             serviciosAlquiler.vetarCliente(idCliente, vetado );
+            Assert.assertFalse(true);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             Assert.assertEquals(error,excepcionServiciosAlquiler.getMessage());
         }
     }
 
+    @Test
+    public void registrarAlquilerClienteValido() throws ExcepcionServiciosAlquiler{
+        Date fechaInicioRenta;
+        Date fechaFinRenta;
+        int size;
+        numDias = 5;
+
+        java.sql.Date fechaInicio = java.sql.Date.valueOf("2020-10-07");
+        Item item = serviciosAlquiler.consultarItem(1);
+
+        serviciosAlquiler.registrarAlquilerCliente(fechaInicio,1,item,numDias);
+        Cliente cliente = serviciosAlquiler.consultarCliente(1);
+        size = cliente.getRentados().size() -1 ;
+
+        fechaInicioRenta = cliente.getRentados().get( size ).getFechainiciorenta();
+        fechaFinRenta = cliente.getRentados().get( size ).getFechafinrenta();
+        java.sql.Date fechaFin = java.sql.Date.valueOf("2020-10-12");
+
+        Assert.assertEquals( fechaInicioRenta, fechaInicio);
+        Assert.assertEquals( fechaFinRenta, fechaFin);
+    }
+    @Test
+    public void registrarAlquilerClienteExcepcionCliente() {
+        numDias = 5;
+        java.sql.Date fechaInicio = java.sql.Date.valueOf("2020-10-07");
+        try {
+            Item item = serviciosAlquiler.consultarItem(1);
+            serviciosAlquiler.registrarAlquilerCliente(fechaInicio,-1564898189,item,numDias);
+            Assert.assertTrue( false);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.NO_CLIENTE);
+        }
+    }
+    @Test
+    public void registrarAlquilerClienteExcepcionItem() {
+        numDias = 5;
+        java.sql.Date fechaInicio = java.sql.Date.valueOf("2020-10-07");
+        try {
+            Item item = new Item();
+            item.setId(-10000);
+            serviciosAlquiler.registrarAlquilerCliente(fechaInicio,1,item,numDias);
+            Assert.assertTrue( false);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.NO_ITEM);
+        }
+    }
+    @Test
+    public void registrarAlquilerClienteExcepcionDias() {
+        numDias = -1;
+        java.sql.Date fechaInicio = java.sql.Date.valueOf("2020-10-07");
+        try {
+            Item item = serviciosAlquiler.consultarItem(1);
+            serviciosAlquiler.registrarAlquilerCliente(fechaInicio,1,item,numDias);
+            Assert.assertTrue( false);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertEquals(excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.DIAS_INVALIDOS);
+        }
+    }
 }
