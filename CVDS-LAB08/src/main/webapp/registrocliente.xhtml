@@ -21,15 +21,14 @@
 							 actionListener="#{alquiler.registrarCliente(nombre.value, documento.value,telefono.value,direccion.value,email.value )}"/>
 		</h:form>
 		<h:form id="muestras" class="formaCliente">
-			<p:commandButton id="ConsultButton" value="Consultar" update="MuestraCliente" class="MyButton"
-							 actionListener="#{alquiler.consultarClientes}">
-				<p:ajax render="MuestraCliente"/>
-			</p:commandButton>
-			<p:commandButton id="borrar" value="Borrar" update="MuestraCliente" class="MyButton"
-							 actionListener="#{alquiler.reset}">
-				<p:ajax render="MuestraCliente"/>
-			</p:commandButton>
-			<p:dataTable id="MuestraCliente" value="#{alquiler.clientes}" var="cliente" selection="#{alquiler.selectedCliente}" rowKey="#{cliente.documento}">
+			<h1 style="color: white"> Informacion Clientes</h1>
+			<p:dataTable id="MuestraCliente" value="#{alquiler.clientes}" var="cliente" selection="#{alquiler.selectedCliente}"
+						 rowKey="#{cliente.documento}"
+						 rows="10"
+						 paginator="true"
+						 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+						 rowsPerPageTemplate="1,5,10,15">
 				<f:facet name="header">
 					Clientes actuales
 				</f:facet>
@@ -50,7 +49,22 @@
 					<p:outputLabel value="#{cliente.email}"></p:outputLabel>
 				</p:column>
 			</p:dataTable>
-
+			<table align="center">
+				<tr>
+					<td>
+						<p:commandButton id="ConsultButton" value="Consultar" update="MuestraCliente" class="MyButton"
+										 actionListener="#{alquiler.consultarClientes}">
+							<p:ajax render="MuestraCliente"/>
+						</p:commandButton>
+					</td>
+					<td>
+						<p:commandButton id="borrar" value="Borrar" update="MuestraCliente" class="MyButton"
+										 actionListener="#{alquiler.reset}">
+							<p:ajax render="MuestraCliente"/>
+						</p:commandButton>
+					</td>
+				</tr>
+			</table>
 		</h:form>
 	</div>
 	<div class="underlay-photo"></div>

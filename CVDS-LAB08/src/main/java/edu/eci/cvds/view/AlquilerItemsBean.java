@@ -53,6 +53,8 @@ public class AlquilerItemsBean extends BasePageBean {
     }
 
     public void setSelectedCliente(Cliente selectedCliente) {
+
         this.selectedCliente = selectedCliente;
+        System.out.println(selectedCliente);
     }
 }
