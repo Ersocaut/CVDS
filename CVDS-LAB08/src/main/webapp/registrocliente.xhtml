@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3c.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui" xmlns:P="http://java.sun.com/jsf/html">
 <h:head>
     <title>Registro Cliente</title>
 	<link rel="stylesheet" href="design.css"/>
 </h:head>
 <h:body>
 	<div class="scrollbars">
-		<h:form id="clienteForm" class="formaCliente" >
+		<h:form id="registros" class="formaCliente" >
 			<h1 style="color: white"> Registrar Cliente</h1>
 			<p:inputText id="nombre" styleClass="input-text" type="String" required="true" placeholder="nombre" binding="#{nombre}" />
 			<p:inputText id="documento" styleClass="input-text" type="long" required="true" placeholder="documento" binding="#{documento}" />
 			<p:inputText id="telefono" styleClass="input-text" type="String" required="true" placeholder="telefono" binding="#{telefono}"/>
 			<p:inputText id="direccion" styleClass="input-text" type="String" required="true" placeholder="direccion" binding="#{direccion}"/>
 			<p:inputText id="email" styleClass="input-text" type="String" required="true" placeholder="email" binding="#{email}"/>
-			<p:commandButton value="Registrar" update="clienteForm" class="MyButton"
+			<p:commandButton value="Registrar" update="muestras" class="MyButton"
 							 actionListener="#{alquiler.registrarCliente(nombre.value, documento.value,telefono.value,direccion.value,email.value )}"/>
-			<p:dataTable value="#{alquiler.clientes}" var="cliente" selection="#{alquiler.selectedCliente}" rowKey="#{cliente.documento}">
+		</h:form>
+		<h:form id="muestras" class="formaCliente">
+			<p:commandButton id="ConsultButton" value="Consultar" update="MuestraCliente" class="MyButton"
+							 actionListener="#{alquiler.consultarClientes}">
+				<p:ajax render="MuestraCliente"/>
+			</p:commandButton>
+			<p:commandButton id="borrar" value="Borrar" update="MuestraCliente" class="MyButton"
+							 actionListener="#{alquiler.reset}">
+				<p:ajax render="MuestraCliente"/>
+			</p:commandButton>
+			<p:dataTable id="MuestraCliente" value="#{alquiler.clientes}" var="cliente" selection="#{alquiler.selectedCliente}" rowKey="#{cliente.documento}">
 				<f:facet name="header">
 					Clientes actuales
 				</f:facet>
@@ -40,8 +50,7 @@
 					<p:outputLabel value="#{cliente.email}"></p:outputLabel>
 				</p:column>
 			</p:dataTable>
-			<p:commandButton value="Consultar" update="clienteForm" class="MyButton"
-							 actionListener="#{alquiler.consultarClientes}"/>
+
 		</h:form>
 	</div>
 	<div class="underlay-photo"></div>

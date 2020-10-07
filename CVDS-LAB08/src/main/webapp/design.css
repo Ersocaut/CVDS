@@ -13,6 +13,7 @@ body {
 	display: flex;
 	overflow: hidden;
 	align-items: center;
+	overflow: -moz-scrollbars-vertical;
 	-ms-scrollbar-highlight-color: aqua;
 }
 
@@ -24,6 +25,10 @@ body {
 	margin: auto;
 	max-width: 50%;
 	padding: .5rem;
+}
+
+forma {
+	display: inline;
 }
 
 .input-text{
@@ -63,7 +68,7 @@ body {
 }
 .underlay-photo {
 
-	background: url('https://31.media.tumblr.com/41c01e3f366d61793e5a3df70e46b462/tumblr_n4vc8sDHsd1st5lhmo1_1280.jpg');
+	background: url('https://cdnb.artstation.com/p/assets/images/images/009/739/579/large/adam-williams-pantheon4.jpg?1520617768');
 	background-size: cover;
 	-webkit-filter: grayscale(30%);
 	z-index: -1;
@@ -74,5 +79,5 @@ body {
 }
 table.dataTable{width:100%;margin:0 auto;clear:both;border-collapse:separate;border-spacing:0}
 .scrollbars {
-	overflow:scroll; height:500px;
+	overflow-y:scroll; height:500px;
 }

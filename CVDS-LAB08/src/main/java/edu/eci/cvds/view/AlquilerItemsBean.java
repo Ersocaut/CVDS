@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * @author Iván Camilo Rincón Saavedra
+ * @author Leonardo Galeano
  * @version 10/5/2020
  */
 @ManagedBean(name = "alquiler")
@@ -31,12 +32,14 @@ public class AlquilerItemsBean extends BasePageBean {
     public void registrarCliente(String nombre, long documento, String telefono, String direccion, String email ){
         try {
             serviciosAlquiler.registrarCliente( new Cliente(nombre,documento,telefono,direccion,email) );
-            consultarClientes();
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             excepcionServiciosAlquiler.printStackTrace();
         }
     }
 
+    public void reset(){
+        clientes = null;
+    }
     public List<Cliente> getClientes() {
         return clientes;
     }
