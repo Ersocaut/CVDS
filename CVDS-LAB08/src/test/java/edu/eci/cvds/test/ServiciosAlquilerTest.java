@@ -2,6 +2,8 @@ package edu.eci.cvds.test;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
+
 import com.google.inject.Inject;
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.samples.entities.Cliente;
@@ -338,6 +340,116 @@ public class ServiciosAlquilerTest {
             Assert.assertTrue( false);
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             Assert.assertEquals(excepcionServiciosAlquiler.getMessage(), ExcepcionServiciosAlquiler.DIAS_INVALIDOS);
+        }
+    }
+
+    @Test
+    public void consultarItemValido(){
+        boolean valid = true;
+
+        try{
+            serviciosAlquiler.consultarItem(1);
+        }
+        catch (ExcepcionServiciosAlquiler ex){
+            valid = false;
+        }
+        Assert.assertTrue(valid);
+    }
+
+    @Test
+    public void consultarItemNoValido(){
+        boolean valid = false;
+        try{
+            Item pru = serviciosAlquiler.consultarItem(69);
+        }
+        catch(ExcepcionServiciosAlquiler ex){
+            valid = true;
+        }
+        Assert.assertTrue(valid);
+    }
+
+    @Test
+    public void consultarItemsClienteValido(){
+        boolean empty = true;
+        try {
+            List<ItemRentado> pru = serviciosAlquiler.consultarItemsCliente(2160666);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            empty = false;
+        }
+        Assert.assertTrue(empty);
+    }
+    @Test
+    public void consultarItemsClienteNoValido() {
+        boolean empty = false;
+        try{
+            List<ItemRentado> pru = serviciosAlquiler.consultarItemsCliente(6969);
+        }catch(ExcepcionServiciosAlquiler ex){
+            empty = true;
+        }
+        Assert.assertTrue(empty);
+    }
+
+    @Test
+    public void consultarTipoItemValido(){
+        boolean emp = true;
+        try {
+            serviciosAlquiler.consultarTipoItem(1);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            emp = false;
+        }
+        Assert.assertTrue(emp);
+    }
+    @Test
+    public void consultarTipoItemNoValido(){
+        boolean emp = false;
+        try {
+            serviciosAlquiler.consultarTipoItem(65);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            emp = true;
+        }
+        Assert.assertTrue(emp);
+    }
+
+    @Test
+    public void registrarCliente(){
+        Cliente r = new Cliente("Prueba",2160176,"Prueba","Prueba","Prueba");
+        try {
+            serviciosAlquiler.registrarCliente(r);
+            Assert.assertTrue(true);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+
+        }
+    }
+
+    @Test
+    public void registrarClienteFail(){
+        Cliente r = new Cliente("Prueba",2160176,"Prueba","Prueba","Prueba");
+        try {
+            serviciosAlquiler.registrarCliente(r);
+            Assert.assertTrue(false);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void registrarItem(){
+        try {
+            Item r = new Item(serviciosAlquiler.consultarTipoItem(1),69,"Test","ShouldPass", Date.valueOf("2020-10-07"),15000,"ShouldPass","PruebaInsertar");
+            Assert.assertTrue(true);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void registrarItemFail(){
+        try {
+            Item r = new Item(serviciosAlquiler.consultarTipoItem(-89),-69,"Test","ShouldPass", Date.valueOf("2020-10-07"),15000,"ShouldPass","PruebaInsertar");
+            Assert.assertTrue(false);
+        } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
+            Assert.assertTrue(true);
         }
     }
 }
