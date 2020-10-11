@@ -90,11 +90,12 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
     }
 
     @Override
-    public long consultarMultaAlquiler(int idItem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
+    public long consultarMultaAlquiler(int idItem, Date fechaDevolucion,long idCliente) throws ExcepcionServiciosAlquiler {
         //Esta implementacion se baso de la implementacion de consultarMultaAlquiler que esta en ServiciosAlquilerItemsStub
         try {
             consultarItem( idItem );// valida que exista el item
-            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem) );
+            consultarCliente(idCliente);
+            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem,idCliente) );
             optionalItemRentado.orElseThrow(() -> new ExcepcionServiciosAlquiler(ExcepcionServiciosAlquiler.NO_ALQUILERITEM + idItem));
 
             LocalDate fechaInicioRenta = optionalItemRentado.get().getFechainiciorenta().toLocalDate();
@@ -108,8 +109,6 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
             }
             long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
             return diasRetraso * MULTA_DIARIA;
-
-
         } catch (PersistenceException persistenceException) {
             throw new ExcepcionServiciosAlquiler("Error al consultar la multa de alquiler del Item con id " + idItem, persistenceException);
         }
@@ -208,10 +207,11 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
         }
     }
     @Override
-    public ItemRentado consultarItemsRentados(int idItem) throws ExcepcionServiciosAlquiler{
+    public ItemRentado consultarItemsRentados(int idItem,long idCliente) throws ExcepcionServiciosAlquiler{
         try{
             consultarItem( idItem ); // validar si existe el item
-            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem ) );
+            consultarCliente(idCliente);
+            Optional<ItemRentado> optionalItemRentado = Optional.ofNullable( itemRentadoDAO.consultarItemRentado( idItem,idCliente ) );
             optionalItemRentado.orElseThrow(() -> new ExcepcionServiciosAlquiler( ExcepcionServiciosAlquiler.NO_ALQUILERITEM+idItem));
             return optionalItemRentado.get();
         }

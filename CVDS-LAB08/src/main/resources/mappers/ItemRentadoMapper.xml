@@ -50,7 +50,7 @@
                 WHERE #{idcli} = c.documento;
     </select>
     <select id="consultarItemRentado" parameterType="map" resultMap="ItemRentadoResult">
-        SELECT  DISTINCT
+        SELECT
                 ir.id AS ir_id,
                 ir.fechainiciorenta AS ir_fechainiciorenta ,
                 ir.fechafinrenta AS ir_fechafinrenta,
@@ -69,9 +69,9 @@
                 FROM VI_ITEMRENTADO AS ir
                 INNER JOIN VI_ITEMS AS i ON ir.ITEMS_id=i.id
                 INNER JOIN VI_TIPOITEM AS ti ON i.TIPOITEM_id=ti.id
-                WHERE #{idItem} = ir.ITEMS_id
+                WHERE #{idItem} = ir.ITEMS_id AND
+                	  #{idCliente} = ir.CLIENTES_documento
                 LIMIT 1;
-
     </select>
     <resultMap id="ItemRentadoResult" type="ItemRentado" >
         <id property="id" column="ir_id"/>

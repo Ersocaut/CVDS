@@ -31,7 +31,7 @@ public interface ItemRentadoDAO {
      * @return ItemRentado, informacion de la renta del item
      * @throws PersistenceException, si existe algun error de persitencia al buscar el item rentado
      */
-    public ItemRentado consultarItemRentado( int  idItem ) throws PersistenceException;
+    public ItemRentado consultarItemRentado( int  idItem ,long idCliente) throws PersistenceException;
 
 
 }
