@@ -77,7 +77,7 @@ public class AlquilerItemsBean extends BasePageBean {
         try {
             return serviciosAlquiler.consultarMultaAlquiler(idItem,date,selectedCliente.getDocumento());
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
-            return 0;
+            return -1;
         }
     }
 

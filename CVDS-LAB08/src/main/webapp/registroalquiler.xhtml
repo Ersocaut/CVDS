@@ -12,17 +12,44 @@
 <h:body>
 
     <div class="scrollbars">
-            <p:commandButton   id="Item"  styleClass="MyButton" value="Ver Clientess" action="#{navigationController.paginaCliente}"/>
-    </div>
+            <p:commandButton   id="Item"  styleClass="MyButton" value="Ver Clientes" action="#{navigationController.paginaCliente}"/>
     <h:form id="items" class="formaCliente">
-        <p:dataTable id="MuestraItems" value="#{alquiler.consultarItemsRentados}" var="item">
+        <h1 style="color: white"> Registrar Item Rentado</h1>
+        <p:inputText id="itemID" styleClass="input-text" type="int" required="true" placeholder="ID del Item" binding="#{itemID}" />
+        <p:inputText id="NumDias" styleClass="input-text" type="int" required="true" placeholder="Número de días a alquilar" binding="#{NumDias}" />
+        <p:outputLabel id="vistaPrevia" value="#{alquiler.costo}" style="color: white"/>
+        <p:commandButton value="Ver costo del alquiler"  actionListener="#{alquiler.consultarCosto(itemID.value,NumDias.value)}" update="vistaPrevia" class="MyButton"/>
+        <p:commandButton value="Registrar." update="items" class="MyButton"
+                         actionListener="#{alquiler.registrarItemRentado(itemID.value,NumDias.value)}"/>
+
+        <p:dataTable id="MuestraItems" value="#{alquiler.itemsNoDevueltos}" var="itemRentado">
             <f:facet name="Items No devueltos."/>
-            <p:column headerText="Documento" >
-                <p:outputLabel value="Debería ser el nombre (al menos del item rentado"/>
+            <p:column headerText="Item ID" >
+                <p:outputLabel value="#{itemRentado.item.id}"/>
+            </p:column>
+            <p:column headerText="Nombre">
+                <p:outputLabel value="#{itemRentado.item.nombre}"/>
+            </p:column>
+            <p:column headerText="Fecha Inicio">
+                <p:outputLabel value="#{itemRentado.fechainiciorenta}"/>
+            </p:column>
+            <p:column headerText="Fecha Fin">
+                <p:outputLabel value="#{itemRentado.fechafinrenta}"/>
+            </p:column>
+            <p:column headerText="Tarifa/día">
+                <p:outputLabel value="#{itemRentado.item.tarifaxDia}"/>
+            </p:column>
+            <p:column headerText="Multa">
+                <p:outputLabel value="#{alquiler.consultarMulta(itemRentado.item.id)}"/>
             </p:column>
         </p:dataTable>
+        <p:commandButton id="ConsultItems" value="Consultar" actionListener="#{alquiler.consultarItemsRentados}"
+                         update="MuestraItems" class="MyButton"/>
+
     </h:form>
+
     <div class="underlay-photo"></div>
     <div class="underlay-black"></div>
+    </div>
 </h:body>
 </html>
