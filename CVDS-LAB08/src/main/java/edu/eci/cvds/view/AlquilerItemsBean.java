@@ -31,6 +31,7 @@ public class AlquilerItemsBean extends BasePageBean {
     @Inject
     private ServiciosAlquiler serviciosAlquiler;
 
+
     public void consultarClientes(){
         try {
             clientes = (id == 0)?serviciosAlquiler.consultarClientes():Arrays.asList(serviciosAlquiler.consultarCliente(id));
@@ -64,7 +65,7 @@ public class AlquilerItemsBean extends BasePageBean {
         }
     }
 
-    public void consultarItemsNoRentados(){
+    public void consultarItemsRentados(){
         try {
             itemsNoDevueltos =  serviciosAlquiler.consultarItemsCliente( selectedCliente.getDocumento());
         }
@@ -78,9 +79,8 @@ public class AlquilerItemsBean extends BasePageBean {
         } catch (ExcepcionServiciosAlquiler excepcionServiciosAlquiler) {
             return 0;
         }
-
-
     }
+
     public void resetItems(){itemsNoDevueltos=null;}
     public void reset(){
         id=0;

@@ -5,20 +5,23 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui" xmlns:P="http://java.sun.com/jsf/html">
 <h:head>
-    <title>Registrar de alquileres</title>
+    <title>Registro de alquileres</title>
     <link rel="stylesheet" href="design.css"/>
 </h:head>
 
 <h:body>
 
     <div class="scrollbars">
-        <h:form id="registros" class="formaCliente" >
-            <h1> Holi</h1><br/>
             <p:commandButton   id="Item"  styleClass="MyButton" value="Ver Clientess" action="#{navigationController.paginaCliente}"/>
-        </h:form>
-
     </div>
-
+    <h:form id="items" class="formaCliente">
+        <p:dataTable id="MuestraItems" value="#{alquiler.consultarItemsRentados}" var="item">
+            <f:facet name="Items No devueltos."/>
+            <p:column headerText="Documento" >
+                <p:outputLabel value="Debería ser el nombre (al menos del item rentado"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
     <div class="underlay-photo"></div>
     <div class="underlay-black"></div>
 </h:body>
