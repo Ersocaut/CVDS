@@ -10,3 +10,16 @@
 ## Despliegue en Heroku :rocket:
 [![Deployed to Heroku](https://www.herokucdn.com/deploy/button.png)](https://lab08cvds.herokuapp.com/)
 
+# __Clases de Equivalencia__
+
+![Imag1](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c1.png)
+![Imag2](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c2.png)
+![Imag3](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c3.png)
+![Imag4](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c4.png)
+![Imag5](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c5.png)
+![Imag6](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c6.png)
+![Imag7](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c7.png)
+![Imag8](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c8.png)
+![Imag9](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c9.png)
+![Imag10](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c10.png)
+![Imag11](https://github.com/Ersocaut/CVDS/blob/master/CVDS-LAB08/img/c11.png)
